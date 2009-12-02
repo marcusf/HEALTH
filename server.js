@@ -1,8 +1,7 @@
 var sys = require('sys'),
     http = require('http'),
     multipart = require('multipart');
-    
-    
+
 var sendOK = function(res, msg) {
     res.sendHeader(200, {'Content-Type': 'text/plain'});
     res.sendBody(msg);
@@ -14,13 +13,12 @@ var sendError = function(res, msg) {
     res.sendBody(msg);
     res.finish();
 }
-    
+
 var urls     = {};
 var Transfer = { STARTED: "Started", CHUNK: "In transfer", DONE: "Done" };
 
 http.createServer(
-    function (req, res) {
-        
+    function (req, res) {        
         /* File upload */
         if (req.method == "PUT") {
             
