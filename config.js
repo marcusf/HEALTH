@@ -2,7 +2,7 @@
 
 /* HEALTH Client configuration */
 exports.client = {
-    "delay"    : 20 // Delay time in ms 
+    "delay"    : 50 // Delay time in ms 
 };
 
 /* Server configuration */

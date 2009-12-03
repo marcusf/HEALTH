@@ -8,48 +8,11 @@
  
  var sys    = require('sys'),
      http   = require('http'),
+     dbg    = require('./storm-debug'),
      config = require('./config');
      
 var results      = [];
 var currentTime  = function() { return new Date().getTime() };
-
-var printResults = function() { 
-    
-    var avg = 0, max = 0, min = 9999999999999, 
-        cnt = results.length, runtime = (currentTime() - startedAt)/1000,
-        codes = {}, errors = 0;
-        
-    for (i = 0; i < cnt; i++) {
-        var res = results[i];
-        avg += res.requestTime;
-        max  = Math.max(max, res.requestTime);
-        min  = Math.min(min, res.requestTime);
-        // Status codes and error calculation
-        if (codes[res.status] == undefined) { codes[res.status] = 0; }
-        codes[res.status]++;
-        if (res.status >= 400 && res.status < 600) errors++;
-    }
-    
-    avg /= cnt;
-    
-    var throughput = parseInt(1000.0/avg),
-        errors     = parseInt(10000*errors/cnt)/100;
-    
-    sys.puts("\nHEALTH")
-    sys.puts("-------------------------");
-    sys.puts("Runtime:\t"        + runtime + " s");
-    sys.puts("Total requests:\t" + cnt);
-    sys.puts("Throughput:\t"     + throughput + " reqs/s");
-    sys.puts("Average time:\t"   + parseInt(avg) + " ms");
-    sys.puts("Max time:\t"       + max + " ms");
-    sys.puts("Min time:\t"       + min + " ms");
-    sys.puts("Errors:\t\t"       + errors + "%");
-    
-    sys.puts("\nResponse code frequency:\t")
-    for (code in codes) {
-        sys.puts(code + ":\t\t" + codes[code] + " times");
-    }
-}
 
 var GET = function(url, cfg, results) {
     if (cfg.domain == undefined) {
@@ -83,7 +46,7 @@ if (config.host == undefined || config.urls == undefined) {
 }
 
 /* Debug */
-process.addListener("SIGQUIT", printResults);
+process.addListener("SIGQUIT", function() {dbg.printResults(results, startedAt)});
 
 /* Main event loop */
 var ptr       = 0,
@@ -96,17 +59,3 @@ setInterval(
         ptr = (ptr + 1) % length;
     }, 
 config.client.delay || 100);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
