@@ -8,7 +8,7 @@
  
  var sys    = require('sys'),
      http   = require('http'),
-     dbg    = require('./storm-debug'),
+     dbg    = require('./debug'),
      config = require('./config');
      
 var results      = [];

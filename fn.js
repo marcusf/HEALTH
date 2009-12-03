@@ -41,3 +41,13 @@ exports.foldl = function(fn, zero, arr) {
 exports.sum = function(arr) {
     return exports.foldl(function(a,r){return a+r;}, 0, arr);
 }
+
+/** [Int] -> Int */
+exports.max = function(arr) {
+    return Math.max.apply(this, arr);
+}
+
+/** [Int] -> Int */
+exports.min = function(arr) {
+    return Math.min.apply(this, arr);
+}

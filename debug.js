@@ -12,7 +12,6 @@ exports.printResults = function(results, startedAt) {
     /* Could just as well iterate over these one by one, but not 
      * without looping k*n times instead of just n times.
      */
-    var avg = fn.foldl(fn.sum,1,results);
     fn.map(function(res) {
         avg += res.requestTime;
         max  = Math.max(max, res.requestTime);
