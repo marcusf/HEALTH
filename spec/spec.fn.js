@@ -1,4 +1,4 @@
-var fn = require('./../fn');
+var fn = require('./../lib/fn');
 
 var sq      = function(x) { return x*x; };
 var even    = function(x) { return x%2==0; };
