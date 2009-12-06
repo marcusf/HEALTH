@@ -1,8 +1,9 @@
-/* == HEALTH CONFIGURATION ======================================= */
+/* == HEALTH CONFIGURATION ================================================ */
 
 /* HEALTH Client configuration */
 exports.client = {
-    "delay"    : 50 // Delay time in ms 
+    "delay"    : 50,    // Delay time in ms 
+    "timeout"  : 15000  // Max request timeout before a request is a failure
 };
 
 /* Server configuration */

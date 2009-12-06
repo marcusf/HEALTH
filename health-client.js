@@ -11,18 +11,40 @@ var sys   = require('sys'),
     web   = require('./lib/web'),
     cfg   = require('./config');
 
-var engine = new query.driver(cfg);
+var engine = query.httpStatistics(cfg);
 
 /* Start up the server */
 web.server(function (route) {
-    route.get("\/hello", function (req, res) {
-        res.sendHeader(200, {'Content-Type': 'text/plain'});
-        engine.start();
-        res.finish();   
+    route.put("\/tests\/(\d+)", function(parms, req, res) {
+        
     });
-    route.get("\/heyho", function(req, res) {
+    
+    route.post("\/tests\/(\d+)", function (parms, req, res) {
         res.sendHeader(200, {'Content-Type': 'text/plain'});
-        res.sendBody('Hi-Ho!');
+        engine.start(
+            function (success) {
+                if (success.status >= 400 && success.status < 600) {
+                    res.sendBody(JSON.stringify(success));   
+                } else {
+                    res.sendBody(JSON.stringify(success));                    
+                }
+            },
+            function (failure) {
+                res.sendBody(JSON.stringify(failure));
+            }
+        );
+        //res.finish();   
+    });
+    
+    route.get("\/tests", function (parms, req, res) {
+        res.sendHeader(200, {'Content-Type': 'text/plain'});
+        res.sendBody("");
         res.finish();
     });
+    
+    route.get("\/$", function (parms, req, res) {
+        res.sendHeader(200, {'Content-Type': 'application/json'});
+        res.sendBody(JSON.stringify({ "start": "/tests" }));
+    });
+    
 }).listen(4080);
