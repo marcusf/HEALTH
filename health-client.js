@@ -5,7 +5,8 @@
  * get  /tests/id: Gets the status of the test
  * get  /tests: Gets a list of all active tests
  *
- * KÖER FÖR BEGRÄNSNINGAR: Schedula jobb, köa jobb.
+ * TODO:
+ * - KÖER FÖR BEGRÄNSNINGAR: Schedula jobb, köa jobb.
  */
 
 var sys   = require('sys'),
@@ -38,7 +39,7 @@ web.server(function (route) {
             var map = {};
             
             try {
-                eval("(function(exports) {" + buffer + "})(map)");
+                eval("(function(config) {" + buffer + "})(map)");
             } catch (e) {
                 web.fail(res, 400, "Bad file format:", e);
             };
