@@ -1,1 +1,1 @@
-/** Master thingie. PUTs configuration, and so forth */
+/** Master thingie. Controls workers, PUTs configuration, and so forth. TODO. */

@@ -1,12 +1,13 @@
 /**
- * HEALTH CLIENT
- * put  /tests/id <config>: Configuration
- * post /tests/id state=start/stop: Stops, starts a test.
- * get  /tests/id: Gets the status of the test
- * get  /tests: Gets a list of all active tests
+ * HEALTH WORKER
  *
- * TODO:
- * - KÖER FÖR BEGRÄNSNINGAR: Schedula jobb, köa jobb.
+ * node health-worker.js 
+ *
+ * Typical usage:
+ * curl -T config.js http://localhost:4080/tests/12345 
+ * $ OK
+ * curl -d "action=start" http://localhost:4080/tests/12345
+ * $ <shitloads of json>
  */
 
 var sys   = require('sys'),
@@ -45,7 +46,6 @@ web.server(function (route) {
             };
             
             activeTests[id] = map;
-            sys.puts(JSON.stringify(map));
             res.sendHeader(200, {'Content-Type': 'text/plain'});
             res.sendBody("OK\r\n");
             res.finish();
