@@ -12,12 +12,14 @@
 
 var sys   = require('sys'),
     query = require('./lib/queries'),
-    web   = require('./lib/web'); 
+    web   = require('./lib/web'),
+    queue = require('./lib/queue'); 
 
 /* Start up the server */
 web.server(function (route) {
     
     var activeTests = {};
+    var messageQueue = queue.blocking();
     
     /** 
      * PUT /tests/[0-9]+
@@ -83,14 +85,21 @@ web.server(function (route) {
         
         engine.start(
             function (success) {
+                var msg;
                 if (success.status >= 400 && success.status < 600) {
-                    res.sendBody(JSON.stringify({"status": "failure", "info": success}));   
+                    msg = {"status": "failure", "info": success};
                 } else {
-                    res.sendBody(JSON.stringify({"status": "success", "info": success}));
+                    msg = {"status": "success", "info": success};
                 }
+                messageQueue.push(msg);
+                currentId = messageQueue.length;
+                //res.sendBody(JSON.stringify(msg) + "\r\n");
             },
             function (failure) {
-                res.sendBody(JSON.stringify({"status": "failure", "info": failure}));
+                var msg = {"status": "failure", "info": failure};
+                messageQueue.push(msg);
+                currentId = messageQueue.length;
+                //res.sendBody(JSON.stringify(msg) + "\r\n");                
             }
         );
     });
@@ -100,8 +109,25 @@ web.server(function (route) {
      */
     route.get("^\/tests(/)?$", function (parms, req, res) {
         res.sendHeader(200, {'Content-Type': 'application/json'});
-        res.sendBody(JSON.stringify({"base": "/tests", "tests": activeTests}));
+        res.sendBody(JSON.stringify({"base": "/tests", "tests": activeTests})+"\r\n");
         res.finish();
+    });
+    
+    /**
+     * Lists active tests
+     */
+    route.get("^\/tests/([0-9]+)$", function (parms, req, res) {
+        res.sendHeader(200, {'Content-Type': 'application/json'});
+        var startIdx = parms[0];
+        messageQueue.get(startIdx, function(last, msgs) {
+            var result = { "last": last, messages: [] };
+            for (var i =  0; i < msgs.length; i++) {
+                result.messages.push(msgs[i]);
+            }
+            var cb = req.uri.params.jsoncallback;
+            res.sendBody(cb + "(" + JSON.stringify(result) + ")");
+            res.finish();    
+        });
     });
     
     /**
