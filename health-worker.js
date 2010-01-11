@@ -114,7 +114,7 @@ web.server(function (route) {
     });
     
     /**
-     * Lists active tests
+     * Lists one active test
      */
     route.get("^\/tests/([0-9]+)$", function (parms, req, res) {
         res.sendHeader(200, {'Content-Type': 'application/json'});
