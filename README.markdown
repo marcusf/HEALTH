@@ -15,8 +15,7 @@ To start the client, do
 
 See `config.js` for configuration options.
 
-Controlling health-worker
-#########################
+### Controlling health-worker
 
     $ curl -T config.js http://localhost:4080/tests/12345 
     OK
