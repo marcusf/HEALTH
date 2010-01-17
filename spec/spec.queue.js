@@ -5,12 +5,12 @@ describe("blocking queue", function() {
        var  q = queue.blocking(), 
             r = queue.blocking();
 
-       q.insert(3).insert(4);
-       assertEquals(2, q.length());
-       assertEquals(0, r.length());
-       r.insert(3).insert(12);
-       assertEquals(2, q.length());
-       assertEquals(2, r.length());
+       q.push(3).push(4);
+       assertEqual(2, q.length());
+       assertEqual(0, r.length());
+       r.push(3).push(12);
+       assertEqual(2, q.length());
+       assertEqual(2, r.length());
    });
    
    it("should only be called once for the getter", function() {
@@ -18,15 +18,15 @@ describe("blocking queue", function() {
        var q = queue.blocking();
        
        var hits = 0;
-       
+
        q.get(1, function(i, slice) {
            hits++;
-           assertEquals(slice, [2]);
+           assertEqual(slice, [2]);
        });
        
-       q.add(1).add(2).add(3);
+       q.push(1).push(2).push(3);
        
-       assertEquals(1, hits);
+       assertEqual(1, hits);
        
    });
  
